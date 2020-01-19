@@ -12,15 +12,16 @@ import (
 
 type writeCounter struct {
 	Total uint64
+	size  int
 }
 
-func (f *fileData) InitIPData(url string, path string) (rs interface{}) {
+func (f *fileData) InitIPData(url string, path string, size int) (rs interface{}) {
 	var tmpData []byte
 
 	_, err := os.Stat(path)
 	if err != nil && os.IsNotExist(err) {
 		log.Println("文件不存在，尝试从网络获取最新 IP 库")
-		err = downloadFile(path, url)
+		err = downloadFile(path, url, size)
 		if err != nil {
 			rs = err
 			return
@@ -56,10 +57,10 @@ func (wc *writeCounter) Write(p []byte) (int, error) {
 
 func (wc writeCounter) printProgress() {
 	fmt.Printf("\r%s", strings.Repeat(" ", 35))
-	fmt.Printf("\rDownloading... %d KB / 10163 KB", wc.Total/1024)
+	fmt.Printf("\rDownloading... %d KB / %d KB", wc.Total/1024, wc.size)
 }
 
-func downloadFile(filepath string, url string) error {
+func downloadFile(filepath string, url string, size int) error {
 	out, err := os.Create(filepath + ".tmp")
 	if err != nil {
 		return err
@@ -72,7 +73,7 @@ func downloadFile(filepath string, url string) error {
 	}
 	defer resp.Body.Close()
 
-	counter := &writeCounter{}
+	counter := &writeCounter{size: size}
 	_, err = io.Copy(out, io.TeeReader(resp.Body, counter))
 	if err != nil {
 		return err

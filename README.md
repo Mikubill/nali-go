@@ -7,6 +7,7 @@
 <a title="Go Report Card" target="_blank" href="https://goreportcard.com/report/github.com/Mikubill/nali-go"><img src="https://goreportcard.com/badge/github.com/Mikubill/nali-go?style=flat-square"></a>
 </p>
 
+本项目支持IPv4（纯真IP数据库）和IPv6（ZX公网IPv6库）。
 
 ## 编译 说明
 
@@ -24,7 +25,11 @@ clone本项目，然后编译即可。
 
 ## 下载/运行 说明
 
-Go语言程序, 可直接在[发布页](https://github.com/Mikubill/nali-go/releases)下载使用.
+Go语言程序, 可直接在[发布页](https://github.com/Mikubill/nali-go/releases)下载使用，也可以使用下面的命令安装:
+
+```bash
+go get -u https://github.com/Mikubill/nali-go
+```
 
 Query simple IP address:
 
