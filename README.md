@@ -2,6 +2,12 @@
 
 <p align="center">给IP加上地理信息的命令行小工具</p>
 
+<p align="center">
+<a title="Release" target="_blank" href="https://github.com/Mikubill/nali-go/releases"><img src="https://img.shields.io/github/release/Mikubill/nali-go.svg?style=flat-square"></a>
+<a title="Go Report Card" target="_blank" href="https://goreportcard.com/report/github.com/Mikubill/nali-go"><img src="https://goreportcard.com/badge/github.com/Mikubill/nali-go?style=flat-square"></a>
+</p>
+
+
 ## 编译 说明
 
 安装 Go，然后设置一下GOPROXY：
