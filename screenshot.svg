@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="terminal" baseProfile="full" viewBox="0 0 503 183" width="503" version="1.1">
+    <defs>
+        <termtosvg:template_settings xmlns:termtosvg="https://github.com/nbedos/termtosvg">
+            <termtosvg:screen_geometry columns="57" rows="6"/>
+            <termtosvg:animation type="css"/>
+        </termtosvg:template_settings>
+        <style type="text/css" id="generated-style"><![CDATA[#screen {
+                font-family: 'DejaVu Sans Mono', monospace;
+                font-style: normal;
+                font-size: 14px;
+            }
+
+        text {
+            dominant-baseline: text-before-edge;
+            white-space: pre;
+        }
+    ]]></style>
+        <style type="text/css" id="user-style">
+            /* The colors defined below are the default 16 colors used for rendering text of the terminal. Adjust
+               them as needed.
+               PowerShell colors based on https://en.wikipedia.org/wiki/ANSI_escape_code#Colors */
+            .foreground {fill: #cccccc;}
+            .background {fill: #0c0c0c;}
+            .color0 {fill: #0c0c0c;}
+            .color1 {fill: #c50f1f;}
+            .color2 {fill: #13a10e;}
+            .color3 {fill: #c19c00;}
+            .color4 {fill: #0037da;}
+            .color5 {fill: #881798;}
+            .color6 {fill: #3a96dd;}
+            .color7 {fill: #cccccc;}
+            .color8 {fill: #767676;}
+            .color9 {fill: #e74856;}
+            .color10 {fill: #16c60c;}
+            .color11 {fill: #f9f1a5;}
+            .color12 {fill: #3b78ff;}
+            .color13 {fill: #b4009e;}
+            .color14 {fill: #61d6d6;}
+            .color15 {fill: #f2f2f2;}
+        </style>
+    </defs>
+    <rect id="terminalui" class="background" width="100%" height="100%" ry="4.5826941"/>
+    <circle cx="24" cy="23" r="7" class="color1"/>
+    <circle cx="44" cy="23" r="7" class="color3"/>
+    <circle cx="64" cy="23" r="7" class="color2"/>
+    <svg id="screen" width="456" height="102" x="23" y="50" viewBox="0 0 456 102" preserveAspectRatio="xMidYMin slice"><rect class="background" height="100%" width="100%" x="0" y="0"/><defs><g id="g1"><text class="color10" font-weight="bold" textLength="24" x="0">&#10140;  </text><text class="color14" font-weight="bold" textLength="8" x="24">~</text><text class="foreground" textLength="8" x="32"> </text><text class="color2" textLength="24" x="40">dig</text><text class="foreground" textLength="240" x="64"> www.scut.edu.cn ANY +short | </text><text class="color2" textLength="32" x="304">nali</text><text class="foreground" textLength="120" x="336">               </text></g><g id="g2"><text class="foreground" textLength="184" x="0">2001:da8:2000:2193::28 </text><text class="color6" textLength="248" x="184">[&#20013;&#22269;&#24191;&#19996;&#30465;&#24191;&#24030;&#24066; &#21326;&#21335;&#29702;&#24037;&#22823;&#23398;]</text></g><g id="g3"><text class="foreground" textLength="112" x="0">202.38.193.28 </text><text class="color6" textLength="264" x="112">[&#24191;&#19996;&#30465;&#24191;&#24030;&#24066; &#21326;&#21335;&#29702;&#24037;&#22823;&#23398;&#25945;&#32946;&#32593;]</text></g><g id="g4"><text class="color10" font-weight="bold" textLength="24" x="0">&#10140;  </text><text class="color14" font-weight="bold" textLength="8" x="24">~</text><text class="foreground" textLength="424" x="32">                                                     </text></g><g id="g5"><text class="background" textLength="8" x="0"> </text></g></defs><g><use y="0" xlink:href="#g1"/><use y="17" xlink:href="#g2"/><use y="34" xlink:href="#g3"/><use y="51" xlink:href="#g4"/><rect class="foreground" height="17" width="8" x="0" y="68"/><use y="68" xlink:href="#g5"/></g></svg>
+</svg>

@@ -1,6 +1,9 @@
 package main
 
 import (
+	"bytes"
+	"compress/zlib"
+	"encoding/binary"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -15,18 +18,45 @@ type writeCounter struct {
 	size  int
 }
 
+// github.com/freshcn/qqwry/blob/bb0d1d8ade3948d506ae836c641c2cbe0ad2ca45/download.go
+func getKey() (uint32, error) {
+	resp, err := http.Get("https://qqwry.mirror.noc.one/copywrite.rar")
+	if err != nil {
+		return 0, err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return 0, err
+	}
+	return binary.LittleEndian.Uint32(body[5*4:]), nil
+}
+
 func (f *fileData) InitIPData(url string, path string, size int) (rs interface{}) {
 	var tmpData []byte
 
 	_, err := os.Stat(path)
 	if err != nil && os.IsNotExist(err) {
 		log.Println("文件不存在，尝试从网络获取最新 IP 库")
-		err = downloadFile(path, url, size)
-		if err != nil {
-			rs = err
-			return
+		if path != "ipv4.dat" {
+			err = downloadFile(path, url, size)
+			if err != nil {
+				rs = err
+				return
+			}
+		} else {
+			err = downloadFile("encrypted.tmp", url, size)
+			if err != nil {
+				rs = err
+				return
+			}
+			if err = decrypt(); err != nil {
+				rs = err
+				return
+			}
 		}
-		log.Printf("已将最新 IP 库保存到本地 %s ", path)
+		log.Printf("已将最新 IP 库保存到本地")
 	}
 
 	f.Path, err = os.OpenFile(path, os.O_RDONLY, 0400)
@@ -87,4 +117,38 @@ func downloadFile(filepath string, url string, size int) error {
 	}
 
 	return nil
+}
+
+func decrypt() error {
+	File, err := os.OpenFile("encrypted.tmp", os.O_RDONLY, 0400)
+	if err != nil {
+		return err
+	}
+	defer File.Close()
+
+	if body, err := ioutil.ReadAll(File); err == nil {
+		if key, err := getKey(); err == nil {
+			for i := 0; i < 0x200; i++ {
+				key = key * 0x805
+				key++
+				key = key & 0xff
+				body[i] = byte(uint32(body[i]) ^ key)
+			}
+
+			reader, err := zlib.NewReader(bytes.NewReader(body))
+			if err != nil {
+				return err
+			}
+
+			Data, err := ioutil.ReadAll(reader)
+			if err != nil {
+				return err
+			}
+
+			if err := ioutil.WriteFile("ipv4.dat", Data, 0644); err == nil {
+				_ = os.Remove("encrypted.tmp")
+			}
+		}
+	}
+	return err
 }
