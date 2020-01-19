@@ -61,6 +61,8 @@ func main() {
 				fmt.Println(analyse(item))
 			}
 		}
+
+		//fmt.Printf("\n")
 		os.Exit(0)
 	}
 
@@ -83,6 +85,7 @@ func main() {
 			}
 		}
 	}
+	//fmt.Printf("\n")
 }
 
 func analyse(item string) string {
@@ -90,7 +93,7 @@ func analyse(item string) string {
 	re4 := regexp.MustCompile(`((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])`)
 	if ip := re4.FindStringSubmatch(item); len(ip) != 0 {
 		if v4db.Data.Data == nil {
-			res := v4db.Data.InitIPData("https://qqwry.mirror.noc.one/QQWry.Dat", "ipv4.dat", 10163)
+			res := v4Data.InitIPData("https://qqwry.mirror.noc.one/qqwry.rar", "ipv4.dat", 5252)
 			if v, ok := res.(error); ok {
 				panic(v)
 			}
@@ -167,7 +170,7 @@ func cmd() {
 		}
 		if os.Args[2] == "ipv4" {
 			update("ipv4.dat")
-			res := v4Data.InitIPData("https://qqwry.mirror.noc.one/QQWry.Dat", "ipv4.dat", 10163)
+			res := v4Data.InitIPData("https://qqwry.mirror.noc.one/qqwry.rar", "ipv4.dat", 5252)
 			if v, ok := res.(error); ok {
 				panic(v)
 			}
