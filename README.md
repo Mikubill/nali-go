@@ -3,7 +3,7 @@
 <p align="center">给IP加上地理信息的命令行小工具</p>
 
 <p align="center">
-<a title="Release" target="_blank" href="https://github.com/Mikubill/nali-go/releases"><img src="https://img.shields.io/github/release/Mikubill/nali-go.svg?style=flat-square"></a>
+<a title="Release" target="_blank" href="https://github.com/Mikubill/nali-go/releases"><img src="https://img.shields.io/github/release/Mikubill/nali-go.svg?style=flat-square&hash=c7"></a>
 <a title="Go Report Card" target="_blank" href="https://goreportcard.com/report/github.com/Mikubill/nali-go"><img src="https://goreportcard.com/badge/github.com/Mikubill/nali-go?style=flat-square"></a>
 </p>
 
@@ -69,6 +69,16 @@ Delete IP Database:
 
 ```bash
 nali delete
+```
+
+Check Version:
+
+```bash
+nali version
+
+NaLi-Go 
+Source: https://github.com/Mikubill/nali-go
+Git Commit Hash: 61e7869a02dc88c28093fac5a5aa35c06ef18333
 ```
 
 ## Related
