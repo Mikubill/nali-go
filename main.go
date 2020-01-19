@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	version = "NaLi-Go 1.3.0\n" +
+	version = "NaLi-Go 1.4.0\n" +
 		"Source: https://github.com/Mikubill/nali-go\n" +
 		"Git Commit Hash: %s\n"
 	helper = "Usage: %s <command> [options] \n" +
