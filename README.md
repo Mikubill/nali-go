@@ -13,28 +13,6 @@
 
 本项目支持IPv4（纯真IP数据库）和IPv6（ZX公网IPv6库）。
 
-## 编译 说明
-
-安装 Go
-```bash
-wget https://dl.google.com/go/go1.13.6.linux-amd64.tar.gz
-tar -C /usr/local -xzf go1.13.6.linux-amd64.tar.gz
-export PATH=$PATH:/usr/local/go/bin:`pwd`/go/bin/
-```
-
-然后设置一下GOPROXY：
-
-```bash
-export GOPROXY=https://goproxy.cn
-```
-
-clone本项目，然后编译即可。
-
-```bash
-go get -u github.com/Mikubill/nali-go
-go install github.com/Mikubill/nali-go
-```
-
 ## 下载/运行 说明
 
 Go语言程序, 可直接在[发布页](https://github.com/Mikubill/nali-go/releases)下载使用。
@@ -47,7 +25,7 @@ Query simple IP address:
 2.3.6.7 [法国 Orange]
 1.1.2.5 [福建省 电信]
 
-➜  nali-go 2001:da8:2:1::2
+➜ nali-go 2001:da8:2:1::2
 
 2001:da8:2:1::2 [中国北京市 教育网(CERNET2N)骨干网-清华大学-郑州大学]
 ```
@@ -96,6 +74,28 @@ Check Version:
 NaLi-Go 
 Source: https://github.com/Mikubill/nali-go
 Git Commit Hash: 61e7869a02dc88c28093fac5a5aa35c06ef18333
+```
+
+## 编译 说明
+
+安装 Go
+```bash
+wget https://dl.google.com/go/go1.13.6.linux-amd64.tar.gz
+tar -C /usr/local -xzf go1.13.6.linux-amd64.tar.gz
+export PATH=$PATH:/usr/local/go/bin:`pwd`/go/bin/
+```
+
+然后设置一下GOPROXY：
+
+```bash
+export GOPROXY=https://goproxy.cn
+```
+
+clone本项目，然后编译即可。
+
+```bash
+go get -u github.com/Mikubill/nali-go
+go install github.com/Mikubill/nali-go
 ```
 
 ## Related
