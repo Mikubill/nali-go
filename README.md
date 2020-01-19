@@ -17,22 +17,22 @@
 
 安装 Go
 ```bash
-➜ wget https://dl.google.com/go/go1.13.6.linux-amd64.tar.gz
-➜ tar -C /usr/local -xzf go1.13.6.linux-amd64.tar.gz
-➜ export PATH=$PATH:/usr/local/go/bin:`pwd`/go/bin/
+wget https://dl.google.com/go/go1.13.6.linux-amd64.tar.gz
+tar -C /usr/local -xzf go1.13.6.linux-amd64.tar.gz
+export PATH=$PATH:/usr/local/go/bin:`pwd`/go/bin/
 ```
 
 然后设置一下GOPROXY：
 
 ```bash
-➜ export GOPROXY=https://goproxy.cn
+export GOPROXY=https://goproxy.cn
 ```
 
 clone本项目，然后编译即可。
 
 ```bash
-➜ go get -u github.com/Mikubill/nali-go
-➜ go install github.com/Mikubill/nali-go
+go get -u github.com/Mikubill/nali-go
+go install github.com/Mikubill/nali-go
 ```
 
 ## 下载/运行 说明
