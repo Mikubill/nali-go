@@ -160,16 +160,20 @@ func cmd() {
 	switch {
 	case contains(commands, os.Args[1]):
 		execute(strings.Join(os.Args[1:], " ") + " | " + os.Args[0])
+		os.Exit(0)
 	case contains(help, os.Args[1]):
 		fmt.Printf(helper, os.Args[0])
+		os.Exit(0)
 	case contains(ver, os.Args[1]):
 		_version()
+		os.Exit(0)
 	case os.Args[1] == "update":
 		_update(false, contains(os.Args, "--force"))
+		os.Exit(0)
 	case os.Args[1] == "delete":
 		_update(true, contains(os.Args, "--force"))
+		os.Exit(0)
 	}
-	os.Exit(0)
 }
 
 func _version() {
@@ -217,7 +221,7 @@ func ipv6Update(force bool, del bool) {
 	filename := "ipv6.dat"
 	if _, err := os.Stat(filename); err == nil || os.IsExist(err) {
 		if force != true {
-			if del != true {
+			if del == true {
 				question("删除现有 IPv6 数据库", "正在删除 IPv6 数据库...")
 			} else {
 				question("更新现有 IPv6 数据库", "")
@@ -242,7 +246,7 @@ func allUpdate(force bool, del bool) {
 	_, er2 := os.Stat("ipv6.dat")
 	if er1 == nil || er2 == nil {
 		if force != true {
-			if del != true {
+			if del == true {
 				question("删除现有所有 IP 数据库", "正在删除数据库...")
 			} else {
 				question("更新现有所有 IP 数据库", "")
