@@ -38,7 +38,7 @@ func (f *fileData) InitIPData(url string, path string, size int) (rs interface{}
 
 	_, err := os.Stat(path)
 	if err != nil && os.IsNotExist(err) {
-		log.Println("文件不存在，尝试从网络获取最新 IP 库")
+		log.Printf("文件不存在，尝试从网络获取 %s", path)
 		if path != "ipv4.dat" {
 			err = downloadFile(path, url, size)
 			if err != nil {
@@ -56,7 +56,7 @@ func (f *fileData) InitIPData(url string, path string, size int) (rs interface{}
 				return
 			}
 		}
-		log.Printf("已将最新 IP 库保存到本地")
+		log.Printf("已将 %s 保存到本地", path)
 	}
 
 	f.Path, err = os.OpenFile(path, os.O_RDONLY, 0400)
