@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	version = "NaLi-Go 1.4.0\n" +
+	version = "NaLi-Go 1.5.0\n" +
 		"Source: https://github.com/Mikubill/nali-go\n" +
 		"Git Commit Hash: %s\n"
 	helper = "Usage: %s <command> [options] \n" +
@@ -23,11 +23,15 @@ const (
 		"\n  IP Address     解析 stdin 或参数中的 IP 信息 (默认)" +
 		"\n  update         更新 IP 库" +
 		"\n  delete         删除 IP 库数据\n"
-	refresh = "Usage: %s update <command> \n" +
+	refresh = "Usage: %s update <command> [options] \n" +
+		"\nOptions:" +
+		"\n  --force        强制执行，不询问\n" +
 		"\nCommands:" +
 		"\n  ipv4           更新IPv4数据" +
 		"\n  ipv6           更新IPv6数据\n"
-	remove = "Usage: %s delete <command> \n" +
+	remove = "Usage: %s delete <command> [options] \n" +
+		"\nOptions:" +
+		"\n  --force        强制执行，不询问\n" +
 		"\nCommands:" +
 		"\n  ipv4           删除IPv4数据" +
 		"\n  ipv6           删除IPv6数据\n"
@@ -90,7 +94,7 @@ func main() {
 
 func analyse(item string) string {
 	// ipv4, https://stackoverflow.com/questions/53497/regular-expression-that-matches-valid-ipv6-addresses/17871737#17871737
-	re4 := regexp.MustCompile(`((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])`)
+	re4 := regexp.MustCompile(`((25[0-5]|(2[0-4]|1?[0-9])?[0-9])\.){3}(25[0-5]|(2[0-4]|1?[0-9])?[0-9])`)
 	if ip := re4.FindStringSubmatch(item); len(ip) != 0 {
 		if v4db.Data.Data == nil {
 			res := v4Data.InitIPData("https://qqwry.mirror.noc.one/qqwry.rar", "ipv4.dat", 5252)
@@ -103,7 +107,7 @@ func analyse(item string) string {
 		return strings.ReplaceAll(item, ip[0], result)
 	}
 
-	//ipv6, https://github.com/lilydjwg/winterpy/blob/master/pyexe/ipmarkup
+	// ipv6, https://github.com/lilydjwg/winterpy/blob/master/pyexe/ipmarkup
 	re6 := regexp.MustCompile(`fe80:(:[0-9a-fA-F]{1,4}){0,4}(%\w+)?|([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|(([0-9a-fA-F]{1,4}:){0,6}[0-9a-fA-F]{1,4})?::(([0-9a-fA-F]{1,4}:){0,6}[0-9a-fA-F]{1,4})?`)
 	if ip := re6.FindStringSubmatch(item); len(ip) != 0 {
 		if v6db.Data.Data == nil {
@@ -156,84 +160,151 @@ func cmd() {
 	switch {
 	case contains(commands, os.Args[1]):
 		execute(strings.Join(os.Args[1:], " ") + " | " + os.Args[0])
-		os.Exit(0)
 	case contains(help, os.Args[1]):
 		fmt.Printf(helper, os.Args[0])
-		os.Exit(0)
 	case contains(ver, os.Args[1]):
-		fmt.Printf(version, githash)
-		os.Exit(0)
+		_version()
 	case os.Args[1] == "update":
-		if len(os.Args) != 3 {
-			fmt.Printf(refresh, os.Args[0])
-			os.Exit(0)
-		}
-		if os.Args[2] == "ipv4" {
-			update("ipv4.dat")
-			res := v4Data.InitIPData("https://qqwry.mirror.noc.one/qqwry.rar", "ipv4.dat", 5252)
-			if v, ok := res.(error); ok {
-				panic(v)
-			}
-			os.Exit(0)
-		}
-		if os.Args[2] == "ipv6" {
-			update("ipv6.dat")
-			res := v4Data.InitIPData("https://cdn.jsdelivr.net/gh/Mikubill/nali-go@1.3.0/ipv6wry.db", "ipv6.dat", 1951)
-			if v, ok := res.(error); ok {
-				panic(v)
-			}
-			os.Exit(0)
-		}
-		fmt.Printf(refresh, os.Args[0])
-		os.Exit(0)
+		_update(false, contains(os.Args, "--force"))
 	case os.Args[1] == "delete":
-		if len(os.Args) != 3 {
-			fmt.Printf(remove, os.Args[0])
-			os.Exit(0)
-		}
-		if os.Args[2] == "ipv4" {
-			del("ipv4.dat")
-			os.Exit(0)
-		}
-		if os.Args[2] == "ipv6" {
-			del("ipv6.dat")
-			os.Exit(0)
-		}
-		fmt.Printf(remove, os.Args[0])
-		os.Exit(0)
+		_update(true, contains(os.Args, "--force"))
+	}
+	os.Exit(0)
+}
+
+func _version() {
+	fmt.Printf(version, githash)
+	if _, err := os.Stat("ipv4.dat"); err == nil || os.IsExist(err) {
+		ver := strings.ReplaceAll(analyse("255.255.255.255"), "255.255.255.255", "")
+		fmt.Printf("IPv4 Version： %s\n", ver)
+	} else {
+		fmt.Printf("IPv4 Version： Database Not Found.\n")
+	}
+
+	if _, err := os.Stat("ipv6.dat"); err == nil || os.IsExist(err) {
+		ver := strings.ReplaceAll(analyse("FFFF:FFFF:FFFF:FFFF::"), "FFFF:FFFF:FFFF:FFFF::", "")
+		fmt.Printf("IPv6 Version： %s\n", ver)
+	} else {
+		fmt.Printf("IPv6 Version： Database Not Found.\n")
 	}
 }
 
-func update(filename string) {
-	_, err := os.Stat(filename)
-	if err == nil || os.IsExist(err) {
-		var str string
-		fmt.Printf("确定要更新数据库 %s 嘛（此操作会删除原有数据）? [Y/n]", filename)
-		_, err = fmt.Scanln(&str)
-		if err != nil || (str != "Y" && str != "y") {
-			fmt.Println("Cancelled.")
-			return
+func ipv4Update(force bool, del bool) {
+	filename := "ipv4.dat"
+	if _, err := os.Stat(filename); err == nil || os.IsExist(err) {
+		if force != true {
+			if del != true {
+				question("删除现有 IPv4 数据库", "正在删除 IPv4 数据库...")
+			} else {
+				question("更新现有 IPv4 数据库", "")
+			}
 		}
-		err := os.Remove(filename)
-		if err == nil {
-			log.Printf("数据文件 %s 已清理。正在重新下载...", filename)
-		}
-	}
-}
-
-func del(filename string) {
-	_, err := os.Stat(filename)
-	if err == nil || os.IsExist(err) {
-		var str string
-		fmt.Printf("确定要删除数据库 %s 嘛? [Y/n]", filename)
-		_, err = fmt.Scanln(&str)
-		if err != nil || (str != "Y" && str != "y") {
-			fmt.Println("Cancelled.")
-			return
-		}
-		err := os.Remove(filename)
-		if err == nil {
+		if err := os.Remove(filename); err == nil {
 			log.Printf("数据文件 %s 已清理。", filename)
 		}
+	} else {
+		log.Printf("没有待清理的数据文件。")
+	}
+	if del != true {
+		res := v4Data.InitIPData("https://qqwry.mirror.noc.one/qqwry.rar", filename, 5252)
+		if v, ok := res.(error); ok {
+			panic(v)
+		}
+	}
+}
+
+func ipv6Update(force bool, del bool) {
+	filename := "ipv6.dat"
+	if _, err := os.Stat(filename); err == nil || os.IsExist(err) {
+		if force != true {
+			if del != true {
+				question("删除现有 IPv6 数据库", "正在删除 IPv6 数据库...")
+			} else {
+				question("更新现有 IPv6 数据库", "")
+			}
+		}
+		if err := os.Remove(filename); err == nil {
+			log.Printf("数据文件 %s 已清理。", filename)
+		}
+	} else {
+		log.Printf("没有待清理的数据文件。")
+	}
+	if del != true {
+		res := v6Data.InitIPData("https://cdn.jsdelivr.net/gh/Mikubill/nali-go@1.3.0/ipv6wry.db", "ipv6.dat", 1951)
+		if v, ok := res.(error); ok {
+			panic(v)
+		}
+	}
+}
+
+func allUpdate(force bool, del bool) {
+	_, er1 := os.Stat("ipv4.dat")
+	_, er2 := os.Stat("ipv6.dat")
+	if er1 == nil || er2 == nil {
+		if force != true {
+			if del != true {
+				question("删除现有所有 IP 数据库", "正在删除数据库...")
+			} else {
+				question("更新现有所有 IP 数据库", "")
+			}
+		}
+		if err := os.Remove("ipv4.dat"); err == nil {
+			log.Printf("数据文件 %s 已清理。", "ipv4.dat")
+		}
+		if err := os.Remove("ipv6.dat"); err == nil {
+			log.Printf("数据文件 %s 已清理。", "ipv6.dat")
+		}
+	} else {
+		log.Printf("没有待清理的数据文件。")
+	}
+	if del != true {
+		res := v4Data.InitIPData("https://qqwry.mirror.noc.one/qqwry.rar", "ipv4.dat", 5252)
+		if v, ok := res.(error); ok {
+			panic(v)
+		}
+
+		res = v6Data.InitIPData("https://cdn.jsdelivr.net/gh/Mikubill/nali-go@1.3.0/ipv6wry.db", "ipv6.dat", 1951)
+		if v, ok := res.(error); ok {
+			panic(v)
+		}
+	}
+}
+
+func updateTip(del bool) {
+	if del != true {
+		fmt.Printf(refresh, os.Args[0])
+	} else {
+		fmt.Printf(remove, os.Args[0])
+	}
+}
+
+func _update(del bool, force bool) {
+	switch {
+	case len(os.Args) < 3:
+		updateTip(del)
+	case os.Args[2] == "ipv4":
+		ipv4Update(force, del)
+	case os.Args[2] == "ipv6":
+		ipv6Update(force, del)
+	case os.Args[2] == "all":
+		allUpdate(force, del)
+	default:
+		updateTip(del)
+	}
+	os.Exit(0)
+
+}
+
+func question(action string, result string) {
+	var str string
+	var err error
+	fmt.Printf("确定要 %s 嘛（此操作会影响原有数据）? [Y/n]", action)
+	_, err = fmt.Scanln(&str)
+	if err != nil || (str != "Y" && str != "y") {
+		fmt.Println("Cancelled.")
+		os.Exit(0)
+	}
+	if err == nil {
+		log.Printf("%s", result)
 	}
 }

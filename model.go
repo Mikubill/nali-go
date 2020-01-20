@@ -200,9 +200,9 @@ func (q *pointer) searchIndexV6(ip uint64) uint32 {
 		_ip := binary.LittleEndian.Uint64(buf[:q.ItemLen])
 
 		if end-start == q.IndexLen {
-			if ip > _ip {
-				buf = q.Data.Data[end : end+q.IndexLen]
-			}
+			//if ip > _ip {
+			//	buf = q.Data.Data[end : end+q.IndexLen]
+			//}
 			return byteToUInt32(buf[q.ItemLen:])
 		}
 
