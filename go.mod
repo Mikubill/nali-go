@@ -1,4 +1,4 @@
-module main
+module github.com/sync2github/nali-go
 
 go 1.13
 
