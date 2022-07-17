@@ -1,4 +1,4 @@
-module ggithub.com/Mikubill/nali-go
+module github.com/Mikubill/nali-go
 
 go 1.13
 
